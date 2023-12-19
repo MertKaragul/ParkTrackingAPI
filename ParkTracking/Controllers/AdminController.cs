@@ -5,6 +5,7 @@ using ParkTracking.Models;
 using ParkTracking.Services.Json_web_token;
 using ParkTracking.Services.Managments.RefreshToken;
 using ParkTracking.Services.Managments.UserManagement;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace ParkTracking.Controllers
@@ -56,9 +57,24 @@ namespace ParkTracking.Controllers
 			};
 
 			var accessToken = _jsonWebTokenService.CreateToken(_configuration,claim);
-			var refreshToken = _jsonWebTokenService.CreateRefreshToken(_configuration);
-			refreshTokenManager.AddUserRefreshToken(findUserModel.UserID, refreshToken);
-			return Ok( new { accessToken,refreshToken });
+			var refreshToken = "";
+			// Refresh token
+			var refreshTokenValidity = refreshTokenManager.CheckTokenValidity(findUserModel.UserID);
+
+			Debug.WriteLine("Token validity : " + refreshTokenValidity);
+			if(!refreshTokenValidity)
+			{
+				// Token expired, create new token
+				refreshToken = _jsonWebTokenService.CreateRefreshToken(_configuration);
+				refreshTokenManager.AddUserRefreshToken(findUserModel.UserID, refreshToken);
+			}
+			else
+			{
+				// Token not expired, get database token
+				refreshToken = refreshTokenManager.GetUserRefreshToken(findUserModel.UserID);
+			}
+
+			return Ok( new { accessToken, refreshToken });
 		}
 
 	}
