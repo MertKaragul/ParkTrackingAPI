@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using ParkTracking.Models;
 using ParkTracking.Services.Json_web_token;
+using ParkTracking.Services.Managments.ParkManagement;
 using ParkTracking.Services.Managments.RefreshToken;
 using ParkTracking.Services.Managments.UserManagement;
 using System.Diagnostics;
@@ -11,7 +13,7 @@ using System.Security.Claims;
 namespace ParkTracking.Controllers
 {
 
-    [Route("/[controller]")]
+    [Route("/admin/[controller]")]
 	[ApiController]
 	public class AdminController : ControllerBase {
 
@@ -61,10 +63,10 @@ namespace ParkTracking.Controllers
 			// Refresh token
 			var refreshTokenValidity = refreshTokenManager.CheckTokenValidity(findUserModel.UserID);
 
-			Debug.WriteLine("Token validity : " + refreshTokenValidity);
 			if(!refreshTokenValidity)
 			{
 				// Token expired, create new token
+				refreshTokenManager.RemoveUserRefreshToken(findUserModel.UserID);
 				refreshToken = _jsonWebTokenService.CreateRefreshToken(_configuration);
 				refreshTokenManager.AddUserRefreshToken(findUserModel.UserID, refreshToken);
 			}
@@ -77,5 +79,48 @@ namespace ParkTracking.Controllers
 			return Ok( new { accessToken, refreshToken });
 		}
 
+
+
+		[HttpPost("/createUser")]
+		[Authorize(Roles = "ADMIN")]
+		public async Task<ActionResult> CreateUser([FromBody] UserModel? userModel)
+		{
+			if(userModel == null) return BadRequest(new { message = "User information is required" });
+			try
+			{
+				UserManagement userManagement = new UserManagement(_configuration);
+				userManagement.insert(userModel);
+			}
+			catch(Exception ex) {
+				return StatusCode(500, "Server error");
+			}
+
+            return Ok(new { message = "User successfully created" });
+		}
+
+		[HttpPost("/createPark")]
+		[Authorize(Roles = "ADMIN")]
+		public async Task<ActionResult> CreatePark(string? identyNumber, [FromBody] CarModel? carModel)
+		{
+			if(identyNumber == null) return BadRequest(new { message = "Identy number is required" });
+
+			UserManagement userManagement = new UserManagement(_configuration);
+			ParkManagment parkManagement = new ParkManagment(_configuration);
+			var findUser = await userManagement.findUserByIdentyNumber(identyNumber);
+			if(carModel == null) return BadRequest(new { message = "Car required" });
+			if(findUser == null) return NotFound(new { message = "User not found"});
+			carModel.UserID = findUser.UserID;
+
+			// Create Park area
+			var random = new Random();
+
+		
+
+
+
+
+
+			return Ok(new { message = "Car area created" });
+		}
 	}
 }

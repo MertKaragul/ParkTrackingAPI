@@ -1,11 +1,15 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Collections;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace ParkTracking.Services.Json_web_token {
+	// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVEVYQVNUNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFETUlOIiwibmJmIjoxNzAzMDk3NjM5LCJleHAiOjE3MDMwOTgyMzksImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0In0.AfUdwKKOHU65EPZJ6ttD9-g_D5UPWYW9n75YV2-VhpM
+	// w12+5TRZeuv6ECQ1fxnOWVS4cFfa/uQT3arXwQf/3zA=
+
 	public class JsonWebTokenService : IJsonWebToken {
 		public string CreateRefreshToken(IConfiguration configuration)
 		{
@@ -35,7 +39,7 @@ namespace ParkTracking.Services.Json_web_token {
 			return new JwtSecurityTokenHandler().WriteToken(jwt);
 		}
 
-		public async Task<IEnumerable> VerifyToken(IConfiguration configuration, string token)
+		public async Task<bool> VerifyToken(IConfiguration configuration, string token)
 		{
 			var jwtTokenHandler = new JwtSecurityTokenHandler();
 			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecurityKey"]));
@@ -54,11 +58,12 @@ namespace ParkTracking.Services.Json_web_token {
 						IssuerSigningKey = securityKey
 					}
 				);
-				return jwt.Claims;
-			}
+
+				return true;
+            }
 			catch (Exception ex)
 			{
-				return Array.Empty<string>();
+				return false;
 			}
 		}
 	}

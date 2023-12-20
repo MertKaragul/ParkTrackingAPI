@@ -6,5 +6,6 @@ namespace ParkTracking.Models {
         public int ParkID { get; set; }
 		public int UserID { get; set; }
 		public int ParkNumber { get; set; }
+		public ParkStatus Status { get; set; }
     }
 }

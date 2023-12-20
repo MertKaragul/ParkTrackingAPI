@@ -8,8 +8,6 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace ParkTracking.Services.Managments.RefreshToken {
 	public class RefreshTokenManager {
-
-		private string TIME_PATTERN = "yyyy.MM.dd HH:mm:ss";
 		
 		private readonly IConfiguration _configuration;
 		public RefreshTokenManager(IConfiguration configuration)
@@ -24,8 +22,8 @@ namespace ParkTracking.Services.Managments.RefreshToken {
 			{
 				UserId = userId,
 				RefreshToken = token,
-				StartTime = DateTime.Now.ToString(TIME_PATTERN),
-				EndTime = DateTime.Now.AddMonths(1).ToString(TIME_PATTERN),
+				StartTime = DateTime.Now,
+				EndTime = DateTime.Now.AddMonths(1),
 			};
 			context.Add(refreshTokenModel);
 			context.SaveChanges();
@@ -40,21 +38,19 @@ namespace ParkTracking.Services.Managments.RefreshToken {
 
 			if(findUserToken == null) return false;
 
-			
-			if(DateTime.TryParseExact(findUserToken.EndTime, TIME_PATTERN, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDateTime))
-			{
-				Debug.WriteLine("Parsed date time : " + parsedDateTime + " Date time Now " + DateTime.Now);
-				if(parsedDateTime < DateTime.Now)
-				{
-					// Token not expired
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			return true;
+			return DateTime.Now < findUserToken.EndTime;
+		}
+
+		public bool CheckTokenValidity(string refreshToken)
+		{
+			// If function return true, token not expired
+			// If function return false, token expired
+			using var context = new Context(_configuration);
+			var findUserToken = context.Set<RefreshTokenModel>().FirstOrDefault(x => x.RefreshToken == refreshToken) ?? null;
+
+			if(findUserToken == null) return false;
+
+			return DateTime.Now < findUserToken.EndTime;
 		}
 
 		public void RemoveUserRefreshToken(int userId)
