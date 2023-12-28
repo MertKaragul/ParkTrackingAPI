@@ -67,6 +67,13 @@ namespace ParkTracking.Services.Managments.RefreshToken {
 			return refreshToken == null ? null : refreshToken.RefreshToken;
 		}
 
+		public RefreshTokenModel? getTokenModelByRefreshToken(string refreshToken)
+		{
+            using var context = new Context(_configuration);
+            var findModel = context.Set<RefreshTokenModel>().FirstOrDefault(x => x.RefreshToken == refreshToken);
+            return findModel;
+        }
+
 		
 	}
 }

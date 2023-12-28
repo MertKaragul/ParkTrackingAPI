@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mertk\\source\\repos\\ParkTracking\\ParkTracking\\ParkTracking.csproj": {}
+    "C:\\Users\\mkaragul\\source\\repos\\ParkTrackingAPI\\ParkTrackingAPI\\ParkTracking\\ParkTracking.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mertk\\source\\repos\\ParkTracking\\ParkTracking\\ParkTracking.csproj": {
+    "C:\\Users\\mkaragul\\source\\repos\\ParkTrackingAPI\\ParkTrackingAPI\\ParkTracking\\ParkTracking.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mertk\\source\\repos\\ParkTracking\\ParkTracking\\ParkTracking.csproj",
+        "projectUniqueName": "C:\\Users\\mkaragul\\source\\repos\\ParkTrackingAPI\\ParkTrackingAPI\\ParkTracking\\ParkTracking.csproj",
         "projectName": "ParkTracking",
-        "projectPath": "C:\\Users\\Mertk\\source\\repos\\ParkTracking\\ParkTracking\\ParkTracking.csproj",
-        "packagesPath": "C:\\Users\\Mertk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mertk\\source\\repos\\ParkTracking\\ParkTracking\\obj\\",
+        "projectPath": "C:\\Users\\mkaragul\\source\\repos\\ParkTrackingAPI\\ParkTrackingAPI\\ParkTracking\\ParkTracking.csproj",
+        "packagesPath": "C:\\Users\\mkaragul\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mkaragul\\source\\repos\\ParkTrackingAPI\\ParkTrackingAPI\\ParkTracking\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Mertk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mkaragul\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
