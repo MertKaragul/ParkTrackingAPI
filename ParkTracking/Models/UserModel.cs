@@ -18,7 +18,7 @@ namespace ParkTracking.Models {
             return new[]
             {
                 new Claim(ClaimTypes.Name, Name),
-                new Claim(ClaimTypes.Role, Roles.ToString()),
+                new Claim(ClaimTypes.Role, this.Roles.ToString()),
                 new Claim("User_id", UserID.ToString()),
             };
         }

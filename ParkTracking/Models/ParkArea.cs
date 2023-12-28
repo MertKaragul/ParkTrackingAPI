@@ -7,6 +7,6 @@ namespace ParkTracking.Models
         [Key]
         public int Key { get; set; }
         public int ParkID { get; set; }
-        public ParkStatus Status { get; set; } = ParkStatus.EMPTY;
+        public ParkStatus Status { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace ParkTracking.Services.Json_web_token {
 				signingCredentials: signingCredentials,
 				notBefore: DateTime.Now,
 				claims: claim,
-				expires: DateTime.Now.AddMinutes(Double.Parse(configuration["Jwt:Expiration"]))
+				expires: DateTime.Now.AddHours(Double.Parse(configuration["Jwt:Expiration"]))
 			);
 			return new JwtSecurityTokenHandler().WriteToken(jwt);
 		}

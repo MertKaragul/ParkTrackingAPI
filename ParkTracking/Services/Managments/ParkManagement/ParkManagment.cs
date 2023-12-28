@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using ParkTracking.Models;
 using ParkTracking.Services.Database;
 
@@ -13,8 +14,13 @@ namespace ParkTracking.Services.Managments.ParkManagement
             _configuration = configuration;
         }
 
+        public ParkModel? checkPark(string identy)
+        {
+            using var context = new Context(_configuration);
+            return context.Set<ParkModel>().FirstOrDefault(x => x.UserIdenty == identy);
+        }
 
-		public void createPark(ParkModel parkModel)
+        public void createPark(ParkModel parkModel)
         {
 			using var context = new Context(_configuration);
             context.Add<ParkModel>(parkModel);

@@ -21,5 +21,6 @@ namespace ParkTracking.Services.Database {
 		public DbSet<ParkModel> Park { get; set; }
 		public DbSet<CarModel> Car { get; set; }
 		public DbSet<RefreshTokenModel> refreshTokens { get; set; }
+		public DbSet<ParkArea> parkAreas { get; set; }
 	}
 }
