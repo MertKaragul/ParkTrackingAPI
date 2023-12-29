@@ -15,11 +15,12 @@ namespace ParkTracking.Controllers {
 
         private ParkManagment _parkManagement;
         private ParkAreaManagement _parkAreaManagement;
+        private UserManagement _userManagement;
         public ParkController(IConfiguration configuration)
         {
             _parkManagement = new ParkManagment(configuration);
             _parkAreaManagement = new ParkAreaManagement(configuration);
-
+            _userManagement = new UserManagement(configuration);
         }
 
         [HttpPost("/createPark")]
@@ -45,13 +46,41 @@ namespace ParkTracking.Controllers {
             return Ok(findEmptyParkArea);
         }
 
-        [HttpPost("/showParks")]
+        [HttpGet("/showParks")]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult> ShowParks()
         {
             return Ok(_parkAreaManagement.findAllParkAreas());
         }
 
+        [HttpGet("/showEmptyParks")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult> ShowEmptyParks()
+        {
+            return Ok(_parkAreaManagement.emptyParkAreas());
+        }
 
+        [HttpPut("/updatePark")]
+        [AllowAnonymous]
+        public async Task<ActionResult> UpdateParkStatus(string? identyNumber)
+        {
+            if (identyNumber == null)
+            {
+                return BadRequest(new { message = "Identy number is required" });
+            }
+
+            var checkUserPark = _parkManagement.checkPark(identyNumber);
+            if (checkUserPark == null)
+            {
+                return NotFound();
+            }
+
+            
+            var parkAreaStatus = (await _parkAreaManagement.findParkArea(checkUserPark.ParkNumber));
+            parkAreaStatus.Status = ParkStatus.EMPTY;
+            _parkAreaManagement.updateParkStatus(parkAreaStatus);
+            _parkManagement.removePark(checkUserPark);
+            return Ok( new {message = "Park status updated"});
+        }
     }
 }

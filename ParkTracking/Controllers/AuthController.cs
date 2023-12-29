@@ -81,7 +81,10 @@ namespace ParkTracking.Controllers
 
             // Create new access token
             var getTokenModel = _refreshTokenManager.getTokenModelByRefreshToken(refreshToken);
-            if (getTokenModel == null) return Unauthorized();
+            if (getTokenModel == null)
+            {
+                return Unauthorized();
+            }
 
             UserManagement userManagement = new UserManagement(_configuration);
             var findUser = await userManagement.findUserById(getTokenModel.UserId);

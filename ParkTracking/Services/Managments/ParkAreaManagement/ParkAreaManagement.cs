@@ -13,6 +13,12 @@ namespace ParkTracking.Services.Managments.ParkStatusManagement
             _configuration = configuration;
         }
 
+        public IEnumerable<ParkArea> emptyParkAreas()
+        {
+            using var context = new Context(_configuration);
+            return context.Set<ParkArea>().Where(x => x.Status == ParkStatus.EMPTY).ToArray();
+        }
+
         public List<ParkArea> findAllParkAreas()
         {
             using var context = new Context(_configuration);
@@ -25,7 +31,11 @@ namespace ParkTracking.Services.Managments.ParkStatusManagement
             return await context.Set<ParkArea>().FirstOrDefaultAsync(x => x.Status == ParkStatus.EMPTY);
         }
 
-        
+        public async Task<ParkArea?> findParkArea(int parkAreaID)
+        {
+            using var context = new Context(_configuration);
+            return await context.Set<ParkArea>().FirstOrDefaultAsync(x => x.ParkID == parkAreaID);
+        }
 
         public void updateParkStatus(ParkArea parkArea)
         {
