@@ -17,7 +17,7 @@ namespace ParkTracking.Services.Managments.ParkManagement
         public ParkModel? checkPark(string identy)
         {
             using var context = new Context(_configuration);
-            return context.Set<ParkModel>().FirstOrDefault(x => x.UserIdenty == identy);
+            return context.Set<ParkModel>().FirstOrDefault(x => x.UserIdenty == identy) ?? null;
         }
 
         public void createPark(ParkModel parkModel)

@@ -5,6 +5,7 @@ using ParkTracking.Models;
 using ParkTracking.Services.Json_web_token;
 using ParkTracking.Services.Managments.RefreshToken;
 using ParkTracking.Services.Managments.UserManagement;
+using System.Security.Claims;
 
 namespace ParkTracking.Controllers
 {
@@ -28,24 +29,21 @@ namespace ParkTracking.Controllers
 
         [HttpPost("/login")]
         [AllowAnonymous]
-        public async Task<ActionResult> Login(string? username, string? password, string? identyNumber)
+        public async Task<ActionResult> Login(string? identyNumber, string? password)
         {
             if (
-                Empty.Equals(username) ||
-                username == null ||
                 Empty.Equals(password) ||
                 password == null ||
                 identyNumber == null ||
                 Empty.Equals(identyNumber)
-                ) return BadRequest(new { message = "Information cannot be empty, check your Name,IdentyNumber,Password input values" });
+                ) return BadRequest(new { message = "Information cannot be empty, check your IdentyNumber,Password input values" });
 
             UserModel? findUserModel = await _userManagement.findUserByIdentyNumber(identyNumber);
             if (findUserModel == null) return NotFound(new { message = "User not found" });
             if (
-                findUserModel.Name.Trim() != username.Trim() ||
                 findUserModel.IdentyNumber.Trim() != identyNumber.Trim() ||
             findUserModel.Password.Trim() != password.Trim()
-            ) return NotFound(new { message = "Your Name,IdentyNumber or Password wrong please try again" });
+            ) return NotFound(new { message = "Your IdentyNumber or Password wrong please try again" });
 
             var accessToken = _jsonWebTokenService.CreateToken(_configuration, findUserModel.toClaim());
             var refreshToken = "";

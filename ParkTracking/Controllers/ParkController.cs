@@ -24,8 +24,8 @@ namespace ParkTracking.Controllers {
         }
 
         [HttpPost("/createPark")]
-        [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult> CreatePark(string? identyNumber)
+		[Authorize(Roles = "ADMIN")]
+		public async Task<ActionResult> CreatePark(string? identyNumber)
         {
             if (identyNumber == null) return BadRequest(new { message = "Identy number required" });
             var ifUserAlreadyParking = _parkManagement.checkPark(identyNumber);
@@ -47,21 +47,21 @@ namespace ParkTracking.Controllers {
         }
 
         [HttpGet("/showParks")]
-        [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult> ShowParks()
+		[Authorize(Roles = "ADMIN")]
+		public async Task<ActionResult> ShowParks()
         {
             return Ok(_parkAreaManagement.findAllParkAreas());
         }
 
         [HttpGet("/showEmptyParks")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize("ADMIN")]
         public async Task<ActionResult> ShowEmptyParks()
         {
             return Ok(_parkAreaManagement.emptyParkAreas());
         }
 
         [HttpPut("/updatePark")]
-        [AllowAnonymous]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult> UpdateParkStatus(string? identyNumber)
         {
             if (identyNumber == null)
@@ -72,7 +72,7 @@ namespace ParkTracking.Controllers {
             var checkUserPark = _parkManagement.checkPark(identyNumber);
             if (checkUserPark == null)
             {
-                return NotFound();
+                return NotFound(new {message = "User park not found"});
             }
 
             
@@ -82,5 +82,5 @@ namespace ParkTracking.Controllers {
             _parkManagement.removePark(checkUserPark);
             return Ok( new {message = "Park status updated"});
         }
-    }
+	}
 }

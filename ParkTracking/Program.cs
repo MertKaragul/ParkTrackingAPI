@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ParkTracking.Controllers;
+using ParkTracking.Models;
 using ParkTracking.Services.Database;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,6 +41,11 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ADMIN", policy => policy.RequireRole(Roles.ADMIN.ToString()));
 });
 
 

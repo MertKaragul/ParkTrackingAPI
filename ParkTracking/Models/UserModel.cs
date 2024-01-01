@@ -13,12 +13,11 @@ namespace ParkTracking.Models {
         public Roles Roles { get; set; } = Roles.USER;
 
 
-        public IEnumerable<Claim> toClaim()
+        public Claim[] toClaim()
         {
             return new[]
             {
-                new Claim(ClaimTypes.Name, Name),
-                new Claim(ClaimTypes.Role, this.Roles.ToString()),
+                new Claim(ClaimTypes.Role, Roles.ToString()),
                 new Claim("User_id", UserID.ToString()),
             };
         }
